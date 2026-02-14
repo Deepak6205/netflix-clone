@@ -6,6 +6,7 @@ import play_icon from "../../assets/play_icon.png";
 import info_icon from "../../assets/info_icon.png";
 import Navbar from "../../components/Navbar/Navbar";
 import TitleCards from "../../components/TitleCards/TitleCards";
+import Footer from "../../components/Footer/Footer";
 const Home = () => {
   return (
     <div className="home">
@@ -39,6 +40,7 @@ const Home = () => {
         <TitleCards title={"New Releases"}/>
         <TitleCards title={"Trending Now"}/>
       </div>
+      <Footer/>
     </div>
   );
 };
