@@ -10,6 +10,23 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Basic runtime validation to help surface missing environment variables
+const required = [
+  'apiKey',
+  'authDomain',
+  'projectId',
+  'appId',
+];
+
+const missing = required.filter((key) => !firebaseConfig[key]);
+if (missing.length) {
+  console.error(
+    `Missing Firebase configuration keys: ${missing.join(', ')}.\n` +
+      'Create a .env.local with VITE_FIREBASE_* values from your Firebase project and restart the dev server.'
+  );
+  throw new Error('Firebase configuration is missing. Check console for details.');
+}
+
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export default app;
