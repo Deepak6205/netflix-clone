@@ -35,7 +35,7 @@ const Player = () => {
   };
 
   useEffect(() => {
-    // Fetch video data
+    
     fetch(`https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`, options)
       .then((res) => res.json())
       .then((res) => {
@@ -45,7 +45,7 @@ const Player = () => {
       })
       .catch((err) => console.error(err));
 
-    // Fetch movie details
+    
     fetch(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, options)
       .then((res) => res.json())
       .then((res) => {

@@ -19,7 +19,7 @@ const Login = () => {
     setError("");
     setLoading(true);
 
-    // Validation
+    
     if (!email || !password) {
       setError("Please fill in all fields");
       setLoading(false);

@@ -10,7 +10,7 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Basic runtime validation to help surface missing environment variables
+
 const required = [
   'apiKey',
   'authDomain',

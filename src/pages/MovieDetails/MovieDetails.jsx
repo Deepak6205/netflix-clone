@@ -24,7 +24,7 @@ const MovieDetails = () => {
   };
 
   useEffect(() => {
-    // Fetch movie details
+    
     fetch(`https://api.themoviedb.org/3/movie/${id}?language=en-US`, options)
       .then((res) => res.json())
       .then((res) => {
@@ -33,7 +33,7 @@ const MovieDetails = () => {
       })
       .catch((err) => console.error(err));
 
-    // Fetch cast
+    
     fetch(`https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`, options)
       .then((res) => res.json())
       .then((res) => {
@@ -75,7 +75,7 @@ const MovieDetails = () => {
         </div>
       ) : movie ? (
         <>
-          {/* Hero Section */}
+          
           <div
             className="hero-banner"
             style={{
@@ -114,7 +114,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          {/* Details Section */}
+        
           <div className="details-section">
             <div className="details-grid">
               <div className="detail-item">
@@ -169,7 +169,7 @@ const MovieDetails = () => {
             </div>
           </div>
 
-          {/* Cast Section */}
+          
           {cast.length > 0 && (
             <div className="cast-section">
               <h2>Cast</h2>

@@ -25,13 +25,13 @@ export const AuthProvider = ({ children }) => {
         };
         setUser(appUser);
 
-        // load user-specific watchlist from localStorage if present
+        
         const saved = localStorage.getItem(`watchlist_${fbUser.uid}`) || localStorage.getItem('watchlist');
         setWatchlist(saved ? JSON.parse(saved) : []);
         localStorage.setItem('netflixUser', JSON.stringify(appUser));
       } else {
         setUser(null);
-        // try to load anonymous watchlist
+        
         const savedGuest = localStorage.getItem('watchlist');
         setWatchlist(savedGuest ? JSON.parse(savedGuest) : []);
         localStorage.removeItem('netflixUser');

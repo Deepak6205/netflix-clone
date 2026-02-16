@@ -20,7 +20,7 @@ const Home = () => {
   const typeParam = searchParams.get("type");
   const langParam = searchParams.get("lang");
 
-  // if type param is provided (e.g., tv), map to category
+  
   const effectiveCategory = categoryParam || (typeParam === 'tv' ? 'tv_popular' : null);
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const Home = () => {
     );
   }
 
-  // If a category is requested, render a focused category page
+  
   if (effectiveCategory && !searchQuery) {
     const titleMap = {
       popular: 'Popular Movies',

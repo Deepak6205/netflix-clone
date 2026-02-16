@@ -22,7 +22,7 @@ const TitleCards = ({ title, category }) => {
 
     let url = "";
 
-    // support tv_ prefixed categories to fetch TV endpoints
+    
     if (category && category.startsWith("tv_")) {
       const tvEndpoint = category.slice(3);
       if (tvEndpoint === "trending") {
@@ -73,12 +73,12 @@ const TitleCards = ({ title, category }) => {
   if (!el) return;
 
   const onWheel = (e) => {
-    // Touchpad horizontal scroll → let browser handle it
+    
     if (Math.abs(e.deltaX) > 0) {
       return;
     }
 
-    // Mouse wheel (vertical) → convert to horizontal
+    
     e.preventDefault();
     el.scrollLeft += e.deltaY;
   };
