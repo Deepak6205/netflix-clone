@@ -237,7 +237,13 @@
   background: rgba(255, 255, 255, 0.75);
 }
 
+
+
 @media (max-width: 768px) {
+  .hero {
+    min-height: 320px;
+  }
+
   .search-results-page {
     padding: 70px 20px 40px;
   }
@@ -260,7 +266,55 @@
   }
 }
 
+
 @media (max-width: 480px) {
+  .banner-img {
+    max-height: none;
+    height: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .hero-caption {
+    position: static;
+    padding-left: 4%;
+    padding-right: 4%;
+    margin-top: 8px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.02), transparent);
+    pointer-events: auto;
+    bottom: auto;
+  }
+
+  .caption-img {
+    max-width: 320px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .hero-caption p {
+    font-size: 14px;
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+
+  .hero-btns {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .hero-btns .btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    width: auto;
+  }
+
+  .more-cards {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+
   .search-results-page {
     padding: 70px 15px 40px;
   }
@@ -284,5 +338,22 @@
 
   .search-card-content {
     padding: 10px;
+  }
+}
+
+
+
+@media (max-width: 360px) {
+  .caption-img {
+    max-width: 260px;
+  }
+
+  .hero-caption p {
+    font-size: 13px;
+  }
+
+  .hero-btns .btn {
+    padding: 7px 12px;
+    font-size: 13px;
   }
 }

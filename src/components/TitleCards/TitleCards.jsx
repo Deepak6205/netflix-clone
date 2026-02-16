@@ -51,12 +51,63 @@ const TitleCards = ({ title, category }) => {
       });
   }, [category]);
 
-  const handleWheel = (e) => {
-    if (cardsRef.current) {
+  
+
+  
+  useEffect(() => {
+    const el = cardsRef.current;
+    if (!el) return;
+
+    const onWheel = (e) => {
       e.preventDefault();
-      cardsRef.current.scrollLeft += e.deltaY * 0.7;
-    }
-  };
+      el.scrollLeft += e.deltaY * 1.2;
+    };
+
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel, { passive: false });
+  }, []);
+
+  
+  useEffect(() => {
+    const el = cardsRef.current;
+    if (!el) return;
+
+    let isTouching = false;
+    let startX = 0;
+    let startScroll = 0;
+
+    const onTouchStart = (e) => {
+      if (!e.touches || e.touches.length === 0) return;
+      isTouching = true;
+      startX = e.touches[0].clientX;
+      startScroll = el.scrollLeft;
+    };
+
+    const onTouchMove = (e) => {
+      if (!isTouching || !e.touches || e.touches.length === 0) return;
+      const x = e.touches[0].clientX;
+      const dx = x - startX;
+      
+      if (Math.abs(dx) > 6) e.preventDefault();
+      el.scrollLeft = startScroll - dx;
+    };
+
+    const onTouchEnd = () => {
+      isTouching = false;
+    };
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
+    el.addEventListener('touchend', onTouchEnd);
+    el.addEventListener('touchcancel', onTouchEnd);
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart);
+      el.removeEventListener('touchmove', onTouchMove);
+      el.removeEventListener('touchend', onTouchEnd);
+      el.removeEventListener('touchcancel', onTouchEnd);
+    };
+  }, []);
 
   if (error) {
     return (
@@ -73,11 +124,7 @@ const TitleCards = ({ title, category }) => {
     <div className="title-cards">
       <h2>{title ? title : "Popular on Netflix"}</h2>
 
-      <div
-        className={`card-list ${isLoading ? "loading" : ""}`}
-        ref={cardsRef}
-        onWheel={handleWheel}
-      >
+      <div className={`card-list ${isLoading ? "loading" : ""}`} ref={cardsRef}>
         {isLoading ? (
           <div className="skeleton-loader">
             {[...Array(6)].map((_, i) => (

@@ -13,7 +13,7 @@
 .card-list {
   display: flex;
   gap: 10px;
-  overflow-x: scroll;
+  overflow-x: hidden;
   scroll-behavior: smooth;
   padding: 10px 0;
 }
@@ -209,4 +209,33 @@
     font-size: 11px;
     padding: 10px 8px 6px;
   }
+}
+
+/* Fallback to grid on very small screens to avoid tiny horizontal cards */
+@media (max-width: 420px) {
+  .card-list {
+    display: flex;                 /* keep flex */
+    overflow-x: auto;              /* allow scroll */
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+  }
+
+  .card,
+  .skeleton-card {
+    min-width: 140px;
+    width: 140px;
+    height: 90px;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-size: 12px;
+    padding: 8px;
+  }
+}
+
+
+@media (max-width: 360px) {
+  .card, .skeleton-card { height: 90px; }
+  .title-cards h2 { font-size: 16px; }
 }

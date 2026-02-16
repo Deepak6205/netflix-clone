@@ -10,6 +10,9 @@
     transition: background 0.3s ease;
 }
 
+/* keep navbar above content on small devices */
+.navbar { top: 0; left: 0; right: 0; }
+
 .navbar-left{
     display: flex;
     align-items: center;
@@ -253,6 +256,22 @@
     }
     .hamburger { display: flex; }
     .nav-items { display: none; }
+}
+
+@media (max-width: 420px) {
+    .navbar { padding: 12px 3%; background: linear-gradient(180deg, rgba(0,0,0,0.85), rgba(0,0,0,0.3)); backdrop-filter: blur(6px); }
+    .navbar-left img { width: 56px; }
+    .search-box.active { width: 130px; }
+    .hamburger { width: 40px; height: 40px; }
+    .hamburger span { width: 18px; }
+    .mobile-menu { top: 58px; padding: 16px; }
+}
+
+@media (max-width: 360px) {
+    .navbar { padding: 10px 3%; }
+    .navbar-left { gap: 12px; }
+    .navbar-right { gap: 10px; }
+    .search-box.active { width: 110px; }
 }
 
 @media (max-width: 480px) {
