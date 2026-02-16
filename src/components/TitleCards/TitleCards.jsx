@@ -69,45 +69,28 @@ const TitleCards = ({ title, category }) => {
 
   
   useEffect(() => {
-    const el = cardsRef.current;
-    if (!el) return;
+  const el = cardsRef.current;
+  if (!el) return;
 
-    let isTouching = false;
-    let startX = 0;
-    let startScroll = 0;
+  const onWheel = (e) => {
+    // Touchpad horizontal scroll → let browser handle it
+    if (Math.abs(e.deltaX) > 0) {
+      return;
+    }
 
-    const onTouchStart = (e) => {
-      if (!e.touches || e.touches.length === 0) return;
-      isTouching = true;
-      startX = e.touches[0].clientX;
-      startScroll = el.scrollLeft;
-    };
+    // Mouse wheel (vertical) → convert to horizontal
+    e.preventDefault();
+    el.scrollLeft += e.deltaY;
+  };
 
-    const onTouchMove = (e) => {
-      if (!isTouching || !e.touches || e.touches.length === 0) return;
-      const x = e.touches[0].clientX;
-      const dx = x - startX;
-      
-      if (Math.abs(dx) > 6) e.preventDefault();
-      el.scrollLeft = startScroll - dx;
-    };
+  el.addEventListener("wheel", onWheel, { passive: false });
 
-    const onTouchEnd = () => {
-      isTouching = false;
-    };
+  return () => {
+    el.removeEventListener("wheel", onWheel);
+  };
+}, []);
 
-    el.addEventListener('touchstart', onTouchStart, { passive: true });
-    el.addEventListener('touchmove', onTouchMove, { passive: false });
-    el.addEventListener('touchend', onTouchEnd);
-    el.addEventListener('touchcancel', onTouchEnd);
 
-    return () => {
-      el.removeEventListener('touchstart', onTouchStart);
-      el.removeEventListener('touchmove', onTouchMove);
-      el.removeEventListener('touchend', onTouchEnd);
-      el.removeEventListener('touchcancel', onTouchEnd);
-    };
-  }, []);
 
   if (error) {
     return (
