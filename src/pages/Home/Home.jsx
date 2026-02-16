@@ -16,6 +16,12 @@ const Home = () => {
   const navigate = useNavigate();
 
   const searchQuery = searchParams.get("search");
+  const categoryParam = searchParams.get("category");
+  const typeParam = searchParams.get("type");
+  const langParam = searchParams.get("lang");
+
+  // if type param is provided (e.g., tv), map to category
+  const effectiveCategory = categoryParam || (typeParam === 'tv' ? 'tv_popular' : null);
 
   useEffect(() => {
     if (searchQuery) {
@@ -91,6 +97,30 @@ const Home = () => {
               <button onClick={() => window.history.back()}>Go Back</button>
             </div>
           )}
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  // If a category is requested, render a focused category page
+  if (effectiveCategory && !searchQuery) {
+    const titleMap = {
+      popular: 'Popular Movies',
+      top_rated: 'Blockbuster Movies',
+      upcoming: 'New Releases',
+      trending: 'Trending Now',
+      tv_popular: 'Popular TV Shows',
+      tv_top_rated: 'Top Rated TV Shows',
+    };
+    const title = titleMap[effectiveCategory] || 'Category';
+
+    return (
+      <>
+        <Navbar />
+        <div className="category-page" style={{ padding: '80px 40px' }}>
+          <h1 style={{ marginBottom: 20 }}>{title}</h1>
+          <TitleCards title={title} category={effectiveCategory} />
         </div>
         <Footer />
       </>

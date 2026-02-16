@@ -13,6 +13,8 @@ const Navbar = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
   const { user, logout, watchlist } = useAuth();
   const navigate = useNavigate();
 
@@ -50,14 +52,29 @@ const Navbar = () => {
     <div ref={navRef} className="navbar">
       <div className="navbar-left">
         <img src={logo} alt="logo" onClick={handleLogoClick} style={{ cursor: "pointer" }} />
-        <ul>
-          <li onClick={() => navigate("/")}>Home</li>
-          <li>TV Shows</li>
-          <li>Movies</li>
-          <li>New & Popular</li>
-          <li onClick={() => navigate("/watchlist")}>My List ({watchlist.length})</li>
-          <li>Browse by Language</li>
+        <ul className="nav-items">
+          <li onClick={() => { setMobileOpen(false); navigate('/'); }}>Home</li>
+          <li onClick={() => { setMobileOpen(false); navigate('/?category=tv_popular'); }}>TV Shows</li>
+          <li onClick={() => { setMobileOpen(false); navigate('/?category=popular'); }}>Movies</li>
+          <li onClick={() => { setMobileOpen(false); navigate('/?category=popular'); }}>New & Popular</li>
+          <li onClick={() => { setMobileOpen(false); navigate('/watchlist'); }}>My List ({watchlist.length})</li>
+          <li className="language-item" onMouseEnter={() => setShowLanguages(true)} onMouseLeave={() => setShowLanguages(false)}>
+            Browse by Language
+            {showLanguages && (
+              <div className="language-dropdown">
+                <p onClick={() => { setMobileOpen(false); navigate('/?lang=en'); }}>English</p>
+                <p onClick={() => { setMobileOpen(false); navigate('/?lang=hi'); }}>Hindi</p>
+                <p onClick={() => { setMobileOpen(false); navigate('/?lang=es'); }}>Spanish</p>
+              </div>
+            )}
+          </li>
         </ul>
+
+        <button className={`hamburger ${mobileOpen ? 'open' : ''}`} onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
       <div className="navbar-right">
         <div className={`search-box ${isSearchActive ? "active" : ""}`}>
@@ -112,6 +129,18 @@ const Navbar = () => {
             </div>
           )}
         </div>
+        {mobileOpen && (
+          <div className="mobile-menu">
+            <ul>
+              <li onClick={() => { setMobileOpen(false); navigate('/'); }}>Home</li>
+              <li onClick={() => { setMobileOpen(false); navigate('/?category=tv_popular'); }}>TV Shows</li>
+              <li onClick={() => { setMobileOpen(false); navigate('/?category=popular'); }}>Movies</li>
+              <li onClick={() => { setMobileOpen(false); navigate('/?category=popular'); }}>New & Popular</li>
+              <li onClick={() => { setMobileOpen(false); navigate('/watchlist'); }}>My List ({watchlist.length})</li>
+              <li onClick={() => { setMobileOpen(false); setShowLanguages(true); }}>Browse by Language</li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

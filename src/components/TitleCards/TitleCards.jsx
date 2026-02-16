@@ -22,12 +22,20 @@ const TitleCards = ({ title, category }) => {
 
     let url = "";
 
-    if (category === "trending") {
-      url = "https://api.themoviedb.org/3/trending/movie/week";
+    // support tv_ prefixed categories to fetch TV endpoints
+    if (category && category.startsWith("tv_")) {
+      const tvEndpoint = category.slice(3);
+      if (tvEndpoint === "trending") {
+        url = "https://api.themoviedb.org/3/trending/tv/week";
+      } else {
+        url = `https://api.themoviedb.org/3/tv/${tvEndpoint}?language=en-US&page=1`;
+      }
     } else {
-      url = `https://api.themoviedb.org/3/movie/${
-        category || "now_playing"
-      }?language=en-US&page=1`;
+      if (category === "trending") {
+        url = "https://api.themoviedb.org/3/trending/movie/week";
+      } else {
+        url = `https://api.themoviedb.org/3/movie/${category || "now_playing"}?language=en-US&page=1`;
+      }
     }
 
     fetch(url, options)
