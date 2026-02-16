@@ -33,25 +33,20 @@ const Login = () => {
     }
 
     try {
-      let success = false;
-      if (signState === "Sign In") {
-        success = login(email, password);
-      } else {
-        if (!name) {
-          setError("Please enter your name");
-          setLoading(false);
-          return;
+        if (signState === "Sign In") {
+          await login(email, password);
+          navigate("/");
+        } else {
+          if (!name) {
+            setError("Please enter your name");
+            setLoading(false);
+            return;
+          }
+          await signup(name, email, password);
+          navigate("/");
         }
-        success = signup(name, email, password);
-      }
-
-      if (success) {
-        navigate("/");
-      } else {
-        setError("Authentication failed. Please try again.");
-      }
     } catch (err) {
-      setError("An error occurred. Please try again.");
+        setError(err?.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }

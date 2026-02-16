@@ -70,7 +70,12 @@ const Navbar = () => {
             onFocus={() => setIsSearchActive(true)}
             onBlur={() => setTimeout(() => setIsSearchActive(false), 200)}
           />
-          <img src={search_icon} alt="search" className="search-icon" />
+          <img 
+            src={search_icon} 
+            alt="search" 
+            className="search-icon"
+            onClick={() => setIsSearchActive(!isSearchActive)}
+          />
         </div>
 
         <p className="children-mode">Children</p>

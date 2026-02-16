@@ -1,4 +1,12 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { auth } from '../firebase/firebaseConfig';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+} from 'firebase/auth';
 
 const AuthContext = createContext();
 
@@ -7,73 +15,91 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [watchlist, setWatchlist] = useState([]);
 
-  // Check if user is already logged in (from localStorage)
   useEffect(() => {
-    const savedUser = localStorage.getItem('netflixUser');
-    const savedWatchlist = localStorage.getItem('watchlist');
-    
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    if (savedWatchlist) {
-      setWatchlist(JSON.parse(savedWatchlist));
-    }
-    setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (fbUser) => {
+      if (fbUser) {
+        const appUser = {
+          uid: fbUser.uid,
+          email: fbUser.email,
+          name: fbUser.displayName || fbUser.email.split('@')[0],
+        };
+        setUser(appUser);
+
+        // load user-specific watchlist from localStorage if present
+        const saved = localStorage.getItem(`watchlist_${fbUser.uid}`) || localStorage.getItem('watchlist');
+        setWatchlist(saved ? JSON.parse(saved) : []);
+        localStorage.setItem('netflixUser', JSON.stringify(appUser));
+      } else {
+        setUser(null);
+        // try to load anonymous watchlist
+        const savedGuest = localStorage.getItem('watchlist');
+        setWatchlist(savedGuest ? JSON.parse(savedGuest) : []);
+        localStorage.removeItem('netflixUser');
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const login = (email, password) => {
-    // Simple validation (in real app, verify with backend)
-    if (email && password.length >= 6) {
-      const newUser = {
-        id: Date.now(),
-        email,
-        name: email.split('@')[0],
-        createdAt: new Date().toISOString(),
-      };
-      setUser(newUser);
-      localStorage.setItem('netflixUser', JSON.stringify(newUser));
-      return true;
-    }
-    return false;
+  const signup = async (name, email, password) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName: name });
+
+    const appUser = {
+      uid: cred.user.uid,
+      email: cred.user.email,
+      name,
+    };
+    setUser(appUser);
+    localStorage.setItem('netflixUser', JSON.stringify(appUser));
+    return appUser;
   };
 
-  const signup = (name, email, password) => {
-    if (name && email && password.length >= 6) {
-      const newUser = {
-        id: Date.now(),
-        email,
-        name,
-        createdAt: new Date().toISOString(),
-      };
-      setUser(newUser);
-      localStorage.setItem('netflixUser', JSON.stringify(newUser));
-      return true;
-    }
-    return false;
+  const login = async (email, password) => {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    const fbUser = cred.user;
+    const appUser = {
+      uid: fbUser.uid,
+      email: fbUser.email,
+      name: fbUser.displayName || fbUser.email.split('@')[0],
+    };
+    setUser(appUser);
+    localStorage.setItem('netflixUser', JSON.stringify(appUser));
+    return appUser;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await signOut(auth);
     setUser(null);
     localStorage.removeItem('netflixUser');
   };
 
+  const persistWatchlist = (list) => {
+    if (user && user.uid) {
+      localStorage.setItem(`watchlist_${user.uid}`, JSON.stringify(list));
+    } else {
+      localStorage.setItem('watchlist', JSON.stringify(list));
+    }
+  };
+
   const addToWatchlist = (movie) => {
-    const exists = watchlist.some(item => item.id === movie.id);
+    const exists = watchlist.some((item) => item.id === movie.id);
     if (!exists) {
       const newWatchlist = [...watchlist, movie];
       setWatchlist(newWatchlist);
-      localStorage.setItem('watchlist', JSON.stringify(newWatchlist));
+      persistWatchlist(newWatchlist);
     }
   };
 
   const removeFromWatchlist = (movieId) => {
-    const newWatchlist = watchlist.filter(item => item.id !== movieId);
+    const newWatchlist = watchlist.filter((item) => item.id !== movieId);
     setWatchlist(newWatchlist);
-    localStorage.setItem('watchlist', JSON.stringify(newWatchlist));
+    persistWatchlist(newWatchlist);
   };
 
   const isInWatchlist = (movieId) => {
-    return watchlist.some(item => item.id === movieId);
+    return watchlist.some((item) => String(item.id) === String(movieId));
   };
 
   const value = {
