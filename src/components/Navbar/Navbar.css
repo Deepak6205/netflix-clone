@@ -3,40 +3,117 @@
     padding: 20px 6%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     position: fixed;
     background-image: linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent);
     z-index: 1;
+    transition: background 0.3s ease;
 }
+
 .navbar-left{
     display: flex;
     align-items: center;
     gap: 50px;
 }
+
 .navbar-left img{
     width: 90px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
+
+.navbar-left img:hover{
+    transform: scale(1.05);
+}
+
 .navbar-left ul{
     display: flex;
     list-style: none;
     gap: 20px;
 }
+
 .navbar-left ul li{
     cursor: pointer;
+    font-size: 14px;
+    transition: color 0.3s ease;
 }
+
+.navbar-left ul li:hover{
+    color: #b3b3b3;
+}
+
 .navbar-right{
     display: flex;
     gap: 20px;
     align-items: center;
 }
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(64, 64, 64, 0.8);
+    border-radius: 4px;
+    padding: 0 10px;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 35px;
+}
+
+.search-box.active {
+    width: 250px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+    font-size: 14px;
+    padding: 8px;
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-icon {
+    width: 18px;
+    cursor: pointer;
+}
+
 .navbar-right .icons{
     width: 20px;
     cursor: pointer;
+    transition: opacity 0.2s ease;
 }
+
+.navbar-right .icons:hover{
+    opacity: 0.7;
+}
+
+.children-mode {
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.children-mode:hover {
+    color: #b3b3b3;
+}
+
 .navbar-right .profile{
     border-radius: 4px;
     width: 35px;
-
+    cursor: pointer;
+    transition: transform 0.2s ease;
 }
+
+.navbar-right .profile:hover {
+    transform: scale(1.1);
+}
+
 .navbar-profile{
     display: flex;
     align-items: center;
@@ -44,22 +121,125 @@
     cursor: pointer;
     position: relative;
 }
+
 .navbar .dropdown{
     position: absolute;
     top: 100%;
     right: 0;
-    width: max-content;
+    width: 200px;
     background: #191919;
     padding: 18px 22px;
     border-radius: 2px;
-    text-decoration: underline;
     z-index: 1;
     display: none;
+    margin-top: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    animation: slideDown 0.3s ease;
 }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-header {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+}
+
+.dropdown-header p{
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.dropdown-header small {
+    font-size: 12px;
+    color: #b3b3b3;
+    display: block;
+    margin-top: 5px;
+}
+
+.navbar .dropdown hr {
+    border: none;
+    height: 1px;
+    background: #404040;
+    margin: 10px 0;
+}
+
 .navbar .dropdown p{
     font-size: 13px;
     cursor: pointer;
+    padding: 8px 0;
+    transition: color 0.2s ease;
+    margin: 0;
 }
+
+.navbar .dropdown p:hover {
+    color: #b3b3b3;
+}
+
+.navbar .dropdown p.logout {
+    color: #e50914;
+    font-weight: 600;
+}
+
+.navbar .dropdown p.logout:hover {
+    color: #ff0a16;
+}
+
 .navbar-profile:hover .dropdown{
     display: block;
+    opacity: 1;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 4%;
+    }
+
+    .navbar-left {
+        gap: 30px;
+    }
+
+    .navbar-left img {
+        width: 70px;
+    }
+
+    .navbar-left ul {
+        gap: 15px;
+    }
+
+    .navbar-left ul li {
+        font-size: 12px;
+    }
+
+    .search-box.active {
+        width: 180px;
+    }
+
+    .navbar-right {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-left ul {
+        display: none;
+    }
+
+    .search-box.active {
+        width: 150px;
+    }
+
+    .children-mode {
+        display: none;
+    }
 }

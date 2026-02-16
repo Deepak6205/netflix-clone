@@ -1,28 +1,212 @@
-.title-cards{
-    margin-top: 50px;
-    margin-bottom: 30px;
+.title-cards {
+  margin-top: 50px;
+  margin-bottom: 30px;
 }
-.title-cards h2{
-    margin-bottom: 8px;
+
+.title-cards h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
-.card-list{
-    display: flex;
-    gap: 10px;
-    overflow-x: scroll;
+
+.card-list {
+  display: flex;
+  gap: 10px;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  padding: 10px 0;
 }
-.card-list::-webkit-scrollbar{
-    display: none;
+
+.card-list::-webkit-scrollbar {
+  height: 8px;
 }
-.card-list img{
-    width: 240px;
-    border-radius: 4px;
-    cursor: pointer;
+
+.card-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
 }
-.card-list .card{
-    position: relative;
+
+.card-list::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 10px;
 }
-.card-list .card p{
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
+
+.card-list::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+.card {
+  position: relative;
+  min-width: 240px;
+  width: 240px;
+  height: 150px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img {
+  transform: scale(1.1);
+}
+
+.card:hover {
+  box-shadow: 0 8px 32px rgba(229, 9, 20, 0.5);
+  transform: scaleY(1.1);
+}
+
+.card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover .card-overlay {
+  opacity: 1;
+}
+
+.play-btn {
+  background: white;
+  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.play-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.05);
+}
+
+.card-title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  padding: 15px 10px 8px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+.error-message {
+  padding: 20px;
+  background: rgba(229, 9, 20, 0.2);
+  border-left: 3px solid #e50914;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.error-message p {
+  margin: 0;
+  color: #ff6b6b;
+  font-size: 14px;
+}
+
+.no-content {
+  width: 100%;
+  padding: 40px;
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 16px;
+}
+
+/* Skeleton Loader */
+.skeleton-loader {
+  display: flex;
+  gap: 10px;
+}
+
+.skeleton-card {
+  min-width: 240px;
+  width: 240px;
+  height: 150px;
+  background: linear-gradient(
+    90deg,
+    #333 25%,
+    #404040 50%,
+    #333 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    min-width: 180px;
+    width: 180px;
+    height: 110px;
+  }
+
+  .skeleton-card {
+    min-width: 180px;
+    width: 180px;
+    height: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-cards h2 {
+    font-size: 18px;
+  }
+
+  .card {
+    min-width: 140px;
+    width: 140px;
+    height: 85px;
+  }
+
+  .skeleton-card {
+    min-width: 140px;
+    width: 140px;
+    height: 85px;
+  }
+
+  .card-title {
+    font-size: 11px;
+    padding: 10px 8px 6px;
+  }
 }

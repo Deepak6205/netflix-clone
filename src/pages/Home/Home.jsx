@@ -1,5 +1,5 @@
-import React from "react";
-import "./home.css";
+import React, { useEffect, useState } from "react";
+import "./Home.css";
 import hero_banner from "../../assets/hero_banner.jpg";
 import hero_title from "../../assets/hero_title.png";
 import play_icon from "../../assets/play_icon.png";
@@ -7,7 +7,96 @@ import info_icon from "../../assets/info_icon.png";
 import Navbar from "../../components/Navbar/Navbar";
 import TitleCards from "../../components/TitleCards/TitleCards";
 import Footer from "../../components/Footer/Footer";
+import { useSearchParams, useNavigate } from "react-router-dom";
+
 const Home = () => {
+  const [searchParams] = useSearchParams();
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const navigate = useNavigate();
+
+  const searchQuery = searchParams.get("search");
+
+  useEffect(() => {
+    if (searchQuery) {
+      setIsSearching(true);
+      const options = {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_READ_ACCESS_TOKEN}`,
+        },
+      };
+
+      fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${searchQuery}&language=en-US&page=1`,
+        options
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setSearchResults(data.results || []);
+          setIsSearching(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsSearching(false);
+        });
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
+
+  if (searchQuery) {
+    return (
+      <>
+        <Navbar />
+        <div className="search-results-page">
+          <div className="search-header">
+            <h1>Search Results for "{searchQuery}"</h1>
+            <p className="results-count">
+              Found {searchResults.length} {searchResults.length === 1 ? "result" : "results"}
+            </p>
+          </div>
+
+          {isSearching ? (
+            <div className="loading-container">
+              <div className="spinner"></div>
+              <p>Searching...</p>
+            </div>
+          ) : searchResults.length > 0 ? (
+            <div className="search-grid">
+              {searchResults.map((movie) => (
+                <div
+                  key={movie.id}
+                  className="search-card"
+                  onClick={() => navigate(`/player/${movie.id}`)}
+                >
+                  {movie.backdrop_path && (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                      alt={movie.title}
+                    />
+                  )}
+                  <div className="search-card-content">
+                    <h3>{movie.title}</h3>
+                    <p className="rating">⭐ {movie.vote_average?.toFixed(1)}</p>
+                    <p className="overview">{movie.overview?.substring(0, 80)}...</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="no-results">
+              <p>No results found for "{searchQuery}"</p>
+              <button onClick={() => window.history.back()}>Go Back</button>
+            </div>
+          )}
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <div className="home">
       <Navbar />
@@ -31,16 +120,16 @@ const Home = () => {
               More Info
             </button>
           </div>
-          <TitleCards/>
+          <TitleCards title="Now Playing" />
         </div>
       </div>
       <div className="more-cards">
-        <TitleCards title={"Blockbuster Movies"}/>
-        <TitleCards title={"Popular TV Shows"}/>
-        <TitleCards title={"New Releases"}/>
-        <TitleCards title={"Trending Now"}/>
+        <TitleCards title="Blockbuster Movies" category="top_rated" />
+        <TitleCards title="Popular Movies" category="popular" />
+        <TitleCards title="New Releases" category="upcoming" />
+        <TitleCards title="Trending Now" category="trending" />
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

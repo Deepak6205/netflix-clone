@@ -1,21 +1,104 @@
 import React, { useState } from "react";
 import "./Login.css";
 import logo from "../../assets/logo.png";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+
 const Login = () => {
   const [signState, setSignState] = useState("Sign In");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login, signup } = useAuth();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    // Validation
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      let success = false;
+      if (signState === "Sign In") {
+        success = login(email, password);
+      } else {
+        if (!name) {
+          setError("Please enter your name");
+          setLoading(false);
+          return;
+        }
+        success = signup(name, email, password);
+      }
+
+      if (success) {
+        navigate("/");
+      } else {
+        setError("Authentication failed. Please try again.");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleSignState = () => {
+    setError("");
+    setName("");
+    setEmail("");
+    setPassword("");
+    setSignState(signState === "Sign In" ? "Sign Up" : "Sign In");
+  };
+
   return (
     <div className="login">
       <img src={logo} alt="logo" className="login-logo" />
       <div className="login-form">
         <h1>{signState}</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           {signState === "Sign Up" && (
-            <input type="text" placeholder="Your Name.." />
+            <input 
+              type="text" 
+              placeholder="Your Name.." 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           )}
 
-          <input type="email" placeholder="Email.." />
-          <input type="password" placeholder="password" />
-          <button>{signState}</button>
+          <input 
+            type="email" 
+            placeholder="Email.." 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input 
+            type="password" 
+            placeholder="password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          
+          {error && <p className="error-message">{error}</p>}
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading..." : signState}
+          </button>
+          
           <div className="form-help">
             <div className="remember">
               <input type="checkbox" />
@@ -28,12 +111,12 @@ const Login = () => {
           {signState === "Sign Up" ? (
             <p>
               Already have an account?{" "}
-              <span onClick={() => setSignState("Sign In")}>Sign In Now</span>
+              <span onClick={handleToggleSignState}>Sign In Now</span>
             </p>
           ) : (
             <p>
               New to Netflix?{" "}
-              <span onClick={() => setSignState("Sign Up")}>Sign Up Now</span>
+              <span onClick={handleToggleSignState}>Sign Up Now</span>
             </p>
           )}
         </div>
